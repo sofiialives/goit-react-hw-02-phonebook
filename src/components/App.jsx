@@ -15,8 +15,6 @@ export class App extends Component {
     filter: '',
   };
 
-  id = nanoid();
-
   addContact = contact => {
     const { name, number } = contact;
     const isExist = this.state.contacts.find(
@@ -27,7 +25,7 @@ export class App extends Component {
       return;
     }
     const newContact = {
-      id: this.id,
+      id: nanoid(),
       name,
       number,
     };
