@@ -1,8 +1,8 @@
 import { Component } from 'react';
-import { nanoid } from 'nanoid';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactsList } from './ContactsList/ContactsList';
+import { nanoid } from 'nanoid';
 
 export class App extends Component {
   state = {
@@ -13,27 +13,21 @@ export class App extends Component {
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
-    name: '',
-    number: '',
   };
 
-  handleChange = e => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  };
+  id = nanoid();
 
-  handleSubmit = evt => {
-    evt.preventDefault();
-    const { name, contacts, number } = this.state;
-    const isExist = contacts.find(
+  addContact = contact => {
+    const { name, number } = contact;
+    const isExist = this.state.contacts.find(
       contact => contact.name.toLowerCase() === name.toLowerCase()
     );
     if (isExist) {
       alert(`${name} is already in contacts.`);
-      return
+      return;
     }
     const newContact = {
-      id: this.loginInputId,
+      id: this.id,
       name,
       number,
     };
@@ -44,6 +38,11 @@ export class App extends Component {
         number: '',
       };
     });
+  };
+
+  handleChange = e => {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
   };
 
   handleChangeFilter = e => {
@@ -58,29 +57,17 @@ export class App extends Component {
     });
   };
 
-  loginInputId = nanoid();
-
   render() {
-    const { name, contacts, number, filter } = this.state;
+    const { contacts, filter } = this.state;
     const filterEdit = contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLocaleLowerCase())
     );
     return (
       <div>
         <h1>Phonebook</h1>
-        <ContactForm
-          handleSubmit={this.handleSubmit}
-          loginInputId={this.loginInputId}
-          handleChange={this.handleChange}
-          name={name}
-          number={number}
-        />
+        <ContactForm addContact={this.addContact} />
         <h2>Contacts</h2>
-        <Filter
-          loginInputId={this.loginInputId}
-          handleChange={this.handleChange}
-          filter={filter}
-        />
+        <Filter handleChange={this.handleChange} filter={filter} />
         <ContactsList
           filterEdit={filterEdit}
           deleteContact={this.deleteContact}
